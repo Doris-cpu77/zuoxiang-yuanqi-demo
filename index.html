@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>坐享元气 · 1分钟互动体验版</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background: radial-gradient(circle at top left, #e7fff6 0%, #f8fffc 42%, #edf9ff 100%);
+      color: #1f2d2a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px 12px;
+    }
+
+    .phone {
+      width: min(420px, 100%);
+      min-height: 820px;
+      border-radius: 42px;
+      background: linear-gradient(180deg, #effff8 0%, #ffffff 62%, #f7fbff 100%);
+      box-shadow: 0 28px 90px rgba(32, 126, 102, 0.22), inset 0 0 0 10px #111;
+      padding: 18px 18px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      border-radius: 32px;
+      min-height: 784px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ecfff8 0%, #ffffff 66%, #f4fbff 100%);
+      position: relative;
+      padding: 18px 18px 86px;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    .signal { letter-spacing: 1px; font-size: 14px; }
+
+    .hero {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(115, 214, 185, 0.35);
+      box-shadow: 0 14px 42px rgba(89, 199, 167, 0.18);
+      border-radius: 28px;
+      padding: 18px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(130,231,200,0.38), transparent 68%);
+      top: -52px;
+      right: -54px;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: #64736f;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .score-card {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .score-number {
+      font-size: 48px;
+      font-weight: 900;
+      color: #f5ad2d;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .score-label { color: #53635f; font-size: 14px; margin-top: 6px; }
+
+    .pet-wrap {
+      width: 112px;
+      height: 112px;
+      border-radius: 32px;
+      background: linear-gradient(145deg, #d7fff1, #fff7de);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.9), 0 12px 24px rgba(47,153,126,0.15);
+      animation: float 3.2s ease-in-out infinite;
+    }
+
+    .pet { font-size: 62px; transform: translateY(2px); }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: #e6f3ef;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 35%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #60d4b4, #f6c354);
+      transition: width 500ms ease;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      border-radius: 22px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(115, 214, 185, 0.22);
+      padding: 14px;
+      box-shadow: 0 10px 28px rgba(49, 111, 97, 0.08);
+    }
+
+    .metric .icon { font-size: 22px; margin-bottom: 8px; }
+    .metric .name { color: #63716e; font-size: 13px; }
+    .metric .value { margin-top: 3px; font-size: 22px; font-weight: 900; }
+    .down { color: #35aa8d; }
+    .up { color: #e17248; }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin: 18px 2px 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+    }
+
+    .hint { color: #7a8a86; font-size: 13px; }
+
+    .task-list { display: grid; gap: 12px; }
+
+    .task {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-radius: 22px;
+      padding: 13px;
+      border: 1px solid rgba(88, 199, 165, 0.22);
+      box-shadow: 0 10px 24px rgba(38, 98, 84, 0.08);
+    }
+
+    .task-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: #e7fff6;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+    }
+
+    .task-title { font-weight: 800; font-size: 16px; }
+    .task-desc { color: #6b7774; font-size: 12px; margin-top: 4px; line-height: 1.35; }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #51c9a9, #35b493);
+      box-shadow: 0 8px 18px rgba(65, 185, 151, 0.28);
+      cursor: pointer;
+      transition: transform 150ms ease, opacity 150ms ease;
+      white-space: nowrap;
+    }
+
+    button:active { transform: scale(0.96); }
+    button.secondary { background: #eef5f2; color: #4b625d; box-shadow: none; }
+    button.done { background: #dbe6e2; color: #82918c; box-shadow: none; }
+
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 76px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(150, 190, 178, 0.25);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      padding: 8px 16px 12px;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: #91a09c;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .nav-item span { display: block; font-size: 23px; margin-bottom: 2px; }
+    .nav-item.active { color: #38b596; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: 24px;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(28, 45, 40, 0.92);
+      color: white;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: 240ms ease;
+      z-index: 50;
+      max-width: 92%;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 35, 30, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 40;
+    }
+    .modal-mask.show { display: flex; }
+
+    .modal {
+      width: min(360px, 100%);
+      background: linear-gradient(180deg, #ffffff, #f2fff9);
+      border-radius: 28px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.22);
+    }
+
+    .modal-pet { font-size: 72px; margin-bottom: 10px; }
+    .modal h3 { margin: 4px 0 8px; font-size: 24px; }
+    .modal p { margin: 0 0 18px; color: #64736f; line-height: 1.55; }
+    .modal-actions { display: grid; gap: 10px; }
+
+    .report {
+      display: none;
+      background: linear-gradient(180deg, #fff, #f7fffc);
+      border: 1px solid rgba(115, 214, 185, 0.25);
+      border-radius: 26px;
+      padding: 16px;
+      margin-top: 14px;
+      box-shadow: 0 14px 36px rgba(49,111,97,0.10);
+    }
+    .report.show { display: block; }
+    .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
+    .report-item { background: #f1fbf7; border-radius: 16px; padding: 12px; }
+    .report-item b { display: block; font-size: 20px; margin-bottom: 4px; }
+    .report-item span { color: #6a7774; font-size: 12px; }
+    .suggestion { margin-top: 12px; background: #fff7df; border-radius: 16px; padding: 12px; color: #6c5a21; line-height: 1.45; font-size: 13px; }
+
+    .tiny-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.72);
+      color: #3e6158;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(115,214,185,0.25);
+      margin-bottom: 12px;
+    }
+
+    .demo-footer {
+      margin: 16px 4px 0;
+      color: #8b9995;
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone">
+    <main class="screen">
+      <div class="status">
+        <span>21:08</span>
+        <span class="signal">●●●  Wi‑Fi  ▭</span>
+      </div>
+
+      <section class="hero">
+        <span class="tiny-label">✨ 坐享元气 · 1分钟体验版</span>
+        <div class="title-row">
+          <div>
+            <h1>晚上好，主人<br/>今天也要保持元气哦</h1>
+            <div class="subtitle">完成健康任务，宠物会获得成长值；久坐、熬夜和屏幕使用都会影响它的状态。</div>
+          </div>
+        </div>
+        <div class="score-card">
+          <div>
+            <div class="score-number"><span id="score">35</span><small style="font-size:20px;color:#f5ad2d;"> 元气</small></div>
+            <div class="score-label">今日元气值 · <span id="levelText">Lv.5 → Lv.6</span></div>
+            <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+          </div>
+          <div class="pet-wrap"><div id="pet" class="pet">🦊</div></div>
+        </div>
+      </section>
+
+      <section class="metrics">
+        <div class="metric">
+          <div class="icon">🪑</div>
+          <div class="name">久坐提醒</div>
+          <div class="value">2<span style="font-size:14px;"> 次</span></div>
+        </div>
+        <div class="metric">
+          <div class="icon">🚶</div>
+          <div class="name">起身活动</div>
+          <div class="value down">3<span style="font-size:14px;"> 次</span></div>
+        </div>
+        <div class="metric">
+          <div class="icon">📱</div>
+          <div class="name">屏幕使用</div>
+          <div class="value">4.5<span style="font-size:14px;"> h</span></div>
+        </div>
+        <div class="metric">
+          <div class="icon">🌙</div>
+          <div class="name">睡前少刷</div>
+          <div class="value up">48<span style="font-size:14px;"> 分钟</span></div>
+        </div>
+      </section>
+
+      <div class="section-title">
+        <h2>今日元气任务</h2>
+        <div class="hint">点一点体验闭环</div>
+      </div>
+
+      <section class="task-list">
+        <div class="task">
+          <div class="task-icon">🧍</div>
+          <div>
+            <div class="task-title">模拟久坐提醒</div>
+            <div class="task-desc">系统识别到久坐 60 分钟，引导用户起身活动 2 分钟。</div>
+          </div>
+          <button onclick="openSedentaryModal()">体验</button>
+        </div>
+
+        <div class="task">
+          <div class="task-icon">🌿</div>
+          <div>
+            <div class="task-title">完成健康任务</div>
+            <div class="task-desc">起身活动、远眺放松、喝水提醒，完成后获得元气值。</div>
+          </div>
+          <button id="taskBtn" onclick="completeTask()">去完成</button>
+        </div>
+
+        <div class="task">
+          <div class="task-icon">📊</div>
+          <div>
+            <div class="task-title">生成本周元气报告</div>
+            <div class="task-desc">查看久坐次数、活动变化、睡前屏幕时间和个性化建议。</div>
+          </div>
+          <button onclick="toggleReport()">查看</button>
+        </div>
+      </section>
+
+      <section id="report" class="report">
+        <h2 style="margin:0;">本周元气报告</h2>
+        <p style="margin:6px 0 0;color:#64736f;font-size:13px;line-height:1.5;">你的健康行为正在变好，宠物也更有精神啦。</p>
+        <div class="report-grid">
+          <div class="report-item"><b class="down">82分</b><span>本周元气指数</span></div>
+          <div class="report-item"><b class="down">-15%</b><span>久坐次数下降</span></div>
+          <div class="report-item"><b class="down">+21%</b><span>起身活动增加</span></div>
+          <div class="report-item"><b>76%</b><span>健康任务完成率</span></div>
+        </div>
+        <div class="suggestion">建议：把久坐提醒设置为 50 分钟，并保持睡前 30 分钟少刷手机。连续完成 3 天可解锁「早睡月亮灯」。</div>
+      </section>
+
+      <div class="demo-footer">这是路演用交互原型：重点展示“行为识别—健康干预—游戏化反馈—报告复盘”的核心闭环。</div>
+
+      <nav class="bottom-nav">
+        <div class="nav-item active"><span>🏠</span>首页</div>
+        <div class="nav-item"><span>✅</span>任务</div>
+        <div class="nav-item"><span>📊</span>报告</div>
+        <div class="nav-item"><span>👤</span>我的</div>
+      </nav>
+    </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <div id="sedentaryModal" class="modal-mask">
+    <div class="modal">
+      <div id="modalPet" class="modal-pet">🥺</div>
+      <h3>你已经久坐 60 分钟啦</h3>
+      <p>起来走走吧，陪我一起恢复元气！完成 2 分钟活动后，宠物会获得成长值。</p>
+      <div class="modal-actions">
+        <button onclick="finishSedentaryTask()">开始 2 分钟活动 · +10 元气</button>
+        <button class="secondary" onclick="closeSedentaryModal()">稍后提醒</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let score = 35;
+    let taskDone = false;
+    let sedentaryDone = false;
+
+    function updateScore(add) {
+      score += add;
+      document.getElementById('score').textContent = score;
+      document.getElementById('progressBar').style.width = Math.min(score, 100) + '%';
+      if (score >= 60) {
+        document.getElementById('pet').textContent = '😺';
+        document.getElementById('levelText').textContent = 'Lv.5 成长中';
+      }
+      if (score >= 80) {
+        document.getElementById('pet').textContent = '🦊';
+        document.getElementById('levelText').textContent = '即将升级 Lv.6';
+      }
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function openSedentaryModal() {
+      document.getElementById('sedentaryModal').classList.add('show');
+    }
+
+    function closeSedentaryModal() {
+      document.getElementById('sedentaryModal').classList.remove('show');
+      showToast('已设置 10 分钟后温柔提醒你～');
+    }
+
+    function finishSedentaryTask() {
+      document.getElementById('sedentaryModal').classList.remove('show');
+      if (!sedentaryDone) {
+        updateScore(10);
+        sedentaryDone = true;
+        showToast('起身活动完成！元气值 +10，宠物开心了一点 ✨');
+      } else {
+        showToast('这项任务已经完成啦，继续保持就很棒！');
+      }
+    }
+
+    function completeTask() {
+      const btn = document.getElementById('taskBtn');
+      if (!taskDone) {
+        updateScore(15);
+        taskDone = true;
+        btn.textContent = '已完成';
+        btn.classList.add('done');
+        showToast('健康任务完成！成长值 +15，解锁家园装饰进度 +1 🌿');
+      } else {
+        showToast('今日任务已完成，明天继续加油！');
+      }
+    }
+
+    function toggleReport() {
+      const report = document.getElementById('report');
+      report.classList.toggle('show');
+      if (report.classList.contains('show')) {
+        setTimeout(() => report.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80);
+        showToast('已生成本周元气报告，可作为会员权益展示 📊');
+      }
+    }
+  </script>
+</body>
+</html>
